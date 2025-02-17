@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Define the library
+if(NOT PSP)
 add_library(librecomp STATIC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/ai.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/cont.cpp"
@@ -31,6 +32,30 @@ add_library(librecomp STATIC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/vi.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/o1heap/o1heap/o1heap.c"
 )
+else()
+add_library(librecomp STATIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/ai.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/cont.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/dp.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/eep.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/euc-jp.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/files.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/flash.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/heap.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/math_routines.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/overlays.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/pak.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/pi.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/print.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/recomp.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/rsp.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/sp.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/ultra_stubs.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/ultra_translation.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/vi.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/o1heap/o1heap/o1heap.c"
+)
+endif()
 
 target_include_directories(librecomp PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
@@ -56,5 +81,9 @@ endif()
 add_subdirectory(${PROJECT_SOURCE_DIR}/../thirdparty/miniz ${CMAKE_CURRENT_BINARY_DIR}/miniz)
 add_subdirectory(${PROJECT_SOURCE_DIR}/../N64Recomp ${CMAKE_CURRENT_BINARY_DIR}/N64Recomp EXCLUDE_FROM_ALL)
 
-target_link_libraries(librecomp PRIVATE ultramodern N64Recomp LiveRecomp)
+if(NOT PSP)
+    target_link_libraries(librecomp PRIVATE ultramodern N64Recomp LiveRecomp)
+else()
+    target_link_libraries(librecomp PRIVATE ultramodern N64Recomp)
+endif()
 target_link_libraries(librecomp PUBLIC miniz)

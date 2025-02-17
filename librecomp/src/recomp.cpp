@@ -27,6 +27,9 @@
 #ifdef _WIN32
 #    define WIN32_LEAN_AND_MEAN
 #    include <Windows.h>
+#elif defined (PSP)
+#    include <stdlib.h>
+#    include <string.h>
 #else
 #    include <sys/mman.h>
 #endif
@@ -657,6 +660,15 @@ void recomp::start(
             VirtualFree(rdram, 0, MEM_RELEASE);
         }
     }
+#elif defined(PSP)
+    // Use malloc for allocation on PSP
+    rdram = static_cast<uint8_t*>(std::malloc(allocation_size));
+    alloc_failed = (rdram == nullptr);
+
+    if (!alloc_failed) {
+        // Zero-initialize the allocated memory
+        std::memset(rdram, 0, allocation_size);
+    }
 #else
     rdram = (uint8_t*)mmap(NULL, allocation_size, PROT_NONE, MAP_ANON | MAP_PRIVATE, -1, 0);
     alloc_failed = rdram == reinterpret_cast<uint8_t*>(MAP_FAILED);
@@ -704,10 +716,11 @@ void recomp::start(
     // Free rdram.
     bool free_failed;
 #ifdef _WIN32
-    // VirtualFree returns zero on failure.
     free_failed = (VirtualFree(rdram, 0, MEM_RELEASE) == 0);
+#elif PSP
+    // Use free for deallocation on PSP
+    std::free(rdram);
 #else
-    // munmap returns -1 on failure.
     free_failed = (munmap(rdram, allocation_size) == -1);
 #endif
 

@@ -38,7 +38,7 @@ namespace ultramodern {
             auto operator<=>(const WindowHandle&) const = default;
         };
 // TODO add a native window handle option here (Display/Window for x11 and ANativeWindow for Android) as a compile-time option.
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif defined(__linux__) || defined(__ANDROID__) || defined (PSP)
         using WindowHandle = SDL_Window*;
 #elif defined(__APPLE__)
         struct WindowHandle {

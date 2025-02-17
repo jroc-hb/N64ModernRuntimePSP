@@ -53,8 +53,11 @@ std::string ultramodern::renderer::GraphicsConfig::get_graphics_api_name() const
 #elif defined(__APPLE__)
         // TODO: Add MoltenVK option for Mac?
         api = ultramodern::renderer::GraphicsApi::Vulkan;
+#elif defined(PSP)
+        // TODO: Add an actual PSP renderer
+        return "[Unknown graphics API]";
 #else
-        static_assert(false && "Unimplemented")
+        static_assert(false && "Unimplemented");
 #endif
     }
 

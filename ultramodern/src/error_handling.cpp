@@ -24,6 +24,8 @@ void ultramodern::error_handling::quick_exit(const char* filename, int line, con
 #ifdef __APPLE__
     std::_Exit(exit_status);
 #else
+    #ifndef PSP // FIXME PSP: C++11 should have this...
     std::quick_exit(exit_status);
+    #endif
 #endif
 }
